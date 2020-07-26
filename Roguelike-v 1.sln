@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roguelike-v 1", "Roguelike-v 1.csproj", "{075AF6FC-3125-452B-A629-A5AF8B2D4E40}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	Debug|Any CPU = Debug|Any CPU
+	Release|Any CPU = Release|Any CPU
+	Tools|Any CPU = Tools|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{075AF6FC-3125-452B-A629-A5AF8B2D4E40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{075AF6FC-3125-452B-A629-A5AF8B2D4E40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{075AF6FC-3125-452B-A629-A5AF8B2D4E40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{075AF6FC-3125-452B-A629-A5AF8B2D4E40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{075AF6FC-3125-452B-A629-A5AF8B2D4E40}.Tools|Any CPU.ActiveCfg = Tools|Any CPU
+		{075AF6FC-3125-452B-A629-A5AF8B2D4E40}.Tools|Any CPU.Build.0 = Tools|Any CPU
+	EndGlobalSection
+EndGlobal
