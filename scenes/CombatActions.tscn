@@ -1,0 +1,58 @@
+[gd_scene format=2]
+
+[node name="CombatActions" type="VBoxContainer"]
+margin_left = 117.604
+margin_top = 417.43
+margin_right = 169.604
+margin_bottom = 531.43
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CombatMenu" type="VBoxContainer" parent="."]
+margin_right = 52.0
+margin_bottom = 110.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CombatMenu"]
+margin_right = 52.0
+margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Move_btn" type="Button" parent="CombatMenu"]
+margin_top = 18.0
+margin_right = 52.0
+margin_bottom = 38.0
+text = "Move"
+
+[node name="Attack_btn" type="Button" parent="CombatMenu"]
+margin_top = 42.0
+margin_right = 52.0
+margin_bottom = 62.0
+text = "Attack"
+
+[node name="Skills_btn" type="Button" parent="CombatMenu"]
+margin_top = 66.0
+margin_right = 52.0
+margin_bottom = 86.0
+text = "Skills"
+
+[node name="EndTurn_btn" type="Button" parent="CombatMenu"]
+margin_top = 90.0
+margin_right = 52.0
+margin_bottom = 110.0
+text = "End"
+
+[node name="SkillList" type="VBoxContainer" parent="." groups=[
+"SkillsGroup",
+]]
+margin_top = 114.0
+margin_right = 52.0
+margin_bottom = 114.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

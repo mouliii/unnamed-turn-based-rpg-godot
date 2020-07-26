@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://scenes/Stats/StartingStats.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+job_name = "Rogue"
+maxHp = 85
+maxMp = 40
+strength = 4
+intelligence = 3
+agility = 6
+defence = 50
+speed = 10

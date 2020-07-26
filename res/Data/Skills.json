@@ -1,0 +1,62 @@
+{
+  "Attack": {
+	"name": "Attack",
+    "range": 1,
+	"diagonal": 1,
+	"splashRange": null,
+	"damage": 25,
+	"spalshDamage": null,
+	"accuracy": 0.85,
+	"selfTarget": 1
+  },
+  "Fire": {
+	"name": "Fire",
+    "range": 4,
+	"diagonal": 0,
+	"splashRange": 1,
+	"damage": 30,
+	"splashDamage": 4,
+	"accuracy": 1.0,
+	"selfTarget": 0
+  },
+  "Stab": {
+	"name": "Stab",
+    "range": 1,
+	"diagonal": 0,
+	"splashRange": null,
+	"damage": 40,
+	"splashDamage": null,
+	"accuracy": 0.8,
+	"selfTarget": 1
+	},
+  "Whirlwind": {
+	"name": "Whirlwind",
+    "range": 0,
+	"diagonal": 1,
+	"splashRange": 1,
+	"damage": 35,
+	"spalshDamage": 20,
+	"accuracy": 0.8,
+	"selfTarget": 0
+	},
+   "Bow": {
+	"name": "Bow",
+    "range": 5,
+	"diagonal": 0,
+	"splashRange": null,
+	"damage": 50,
+	"spalshDamage": null,
+	"accuracy": 0.8,
+	"selfTarget": 0
+	},
+  "Heal": {
+	"name": "Heal",
+    "range": 3,
+	"diagonal": 0,
+	"splashRange": 1,
+	"damage": -50,
+	"spalshDamage": -50,
+	"accuracy": 0.8,
+	"selfTarget": 1
+	}
+}
