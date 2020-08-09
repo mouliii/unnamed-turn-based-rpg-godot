@@ -219,23 +219,19 @@ script = ExtResource( 3 )
 
 [node name="PlayerParty" type="Node" parent="TurnSystem"]
 
-[node name="Player" parent="TurnSystem/PlayerParty" instance=ExtResource( 2 )]
-position = Vector2( 153.46, 56.4238 )
-startingStats = ExtResource( 6 )
-
-[node name="Player2" parent="TurnSystem/PlayerParty" instance=ExtResource( 2 )]
-position = Vector2( 136.941, 104.319 )
-startingStats = ExtResource( 8 )
+[node name="Player3" parent="TurnSystem/PlayerParty" instance=ExtResource( 2 )]
+position = Vector2( 103.531, 72.1479 )
+startingStats = ExtResource( 7 )
 
 [node name="EnemyParty" type="Node" parent="TurnSystem"]
 
 [node name="Player2" parent="TurnSystem/EnemyParty" instance=ExtResource( 2 )]
-position = Vector2( 264.326, 71.9213 )
+position = Vector2( 135.935, 55.915 )
 startingStats = ExtResource( 8 )
 
-[node name="Player3" parent="TurnSystem/EnemyParty" instance=ExtResource( 2 )]
-position = Vector2( 296.247, 120.09 )
-startingStats = ExtResource( 7 )
+[node name="Player" parent="TurnSystem/EnemyParty" instance=ExtResource( 2 )]
+position = Vector2( 153.81, 86.6492 )
+startingStats = ExtResource( 6 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

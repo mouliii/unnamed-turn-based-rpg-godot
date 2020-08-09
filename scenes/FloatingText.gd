@@ -13,6 +13,8 @@ func _ready():
 	match type:
 		"damage":
 			text.set("custom_colors/font_color", Color("ff3131"))
+		"hot":
+			text.set("custom_colors/font_color", Color("2eff27"))
 		"heal":
 			text.set("custom_colors/font_color", Color("2eff27"))
 	

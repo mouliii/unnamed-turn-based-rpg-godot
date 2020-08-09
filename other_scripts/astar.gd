@@ -25,7 +25,7 @@ class _Node:
 # lopussa *10 juttu 
 # PoolVector2d muutos <- nopeempi
 
-func astar(start : Vector2, end : Vector2, maxSteps, tilemap : TileMap, space, excludes):
+func astar(start : Vector2, end : Vector2, maxSteps, tilemap : TileMap, space, excludes, checkCharacters):
 	#var spaceState = space
 	#var excludes = exclused_bodies
 	var tm = tilemap
@@ -40,7 +40,7 @@ func astar(start : Vector2, end : Vector2, maxSteps, tilemap : TileMap, space, e
 	if tm.map_to_world(start) == tm.map_to_world(end):
 		return null
 	# check, että mouse ei paikassa, johon ei voi liikkua
-	var mouseCheck = space.intersect_point(tm.map_to_world(end) + tileOffset, 32, excludes, 0x7FFFFFFF, true, true)
+	var mouseCheck = space.intersect_point(tm.map_to_world(end) + tileOffset, 32, excludes, 0x7FFFFFFF, true, checkCharacters)
 	if mouseCheck:
 		return null
 	
@@ -91,53 +91,53 @@ func astar(start : Vector2, end : Vector2, maxSteps, tilemap : TileMap, space, e
 			if i.x > curParent.x and i.y > curParent.y:
 				var result = space.intersect_ray(
 					tm.map_to_world(Vector2(curParent.x + 1,curParent.y)) + tileOffset,
-					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, true)
+					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, checkCharacters)
 				if result:
 					skip = true
 				result = space.intersect_ray(
 					tm.map_to_world(Vector2(curParent.x,curParent.y + 1)) + tileOffset,
-					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, true)
+					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, checkCharacters)
 				if result:
 					skip = true
 			# oik ala -> vas ylä
 			if i.x < curParent.x and i.y < curParent.y:
 				var result = space.intersect_ray(
 					tm.map_to_world(Vector2(curParent.x - 1,curParent.y)) + tileOffset,
-					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, true)
+					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, checkCharacters)
 				if result:
 					skip = true
 				result = space.intersect_ray(
 					tm.map_to_world(Vector2(curParent.x,curParent.y - 1)) + tileOffset,
-					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, true)
+					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, checkCharacters)
 				if result:
 					skip = true
 			# vas ala -> oik ylä
 			if i.x > curParent.x and i.y < curParent.y:
 				var result = space.intersect_ray(
 					tm.map_to_world(Vector2(curParent.x + 1,curParent.y)) + tileOffset,
-					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, true)
+					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, checkCharacters)
 				if result:
 					skip = true
 				result = space.intersect_ray(
 					tm.map_to_world(Vector2(curParent.x,curParent.y - 1)) + tileOffset,
-					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, true)
+					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, checkCharacters)
 				if result:
 					skip = true
 			# oik ylä -> vas ala
 			if i.x < curParent.x and i.y > curParent.y:
 				var result = space.intersect_ray(
 					tm.map_to_world(Vector2(curParent.x - 1,curParent.y)) + tileOffset,
-					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, true)
+					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, checkCharacters)
 				if result:
 					skip = true
 				result = space.intersect_ray(
 					tm.map_to_world(Vector2(curParent.x,curParent.y + 1)) + tileOffset,
-					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, true)
+					tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, checkCharacters)
 				if result:
 					skip = true
 					
 			var result = space.intersect_ray( tm.map_to_world(Vector2(curParent.x,curParent.y)) + tileOffset,
-							tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, true)
+							tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, excludes, 2147483647, true, checkCharacters)
 
 			if result:
 				skip = true

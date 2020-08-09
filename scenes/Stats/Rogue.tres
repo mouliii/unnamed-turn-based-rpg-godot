@@ -5,10 +5,10 @@
 [resource]
 script = ExtResource( 1 )
 job_name = "Rogue"
-maxHp = 85
+maxHp = 275
 maxMp = 40
 strength = 4
 intelligence = 3
-agility = 6
+agility = 7
 defence = 50
 speed = 10

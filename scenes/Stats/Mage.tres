@@ -5,10 +5,10 @@
 [resource]
 script = ExtResource( 1 )
 job_name = "Mage"
-maxHp = 50
+maxHp = 250
 maxMp = 100
 strength = 2
 intelligence = 8
 agility = 3
-defence = 25
+defence = 50
 speed = 4

@@ -51,7 +51,7 @@ class BFS:
 			nArray.append(botLeft)
 		return nArray
 	
-	func GetArea(start : Vector2, radius, diagonal : bool, space, exclusives, excludePos, cornerCut, collideArea2d = false):
+	func GetArea(start : Vector2, radius, diagonal : bool, space, exclusives, cornerCut, collideArea2d = false):
 		var visited = []
 		var queue = []
 		var node = _Node.new()
@@ -173,14 +173,70 @@ class BFS:
 			queue.pop_front()
 		return area
 					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-		
+	func GetLine(start : Vector2, radius, space, excludes, collideArea2d, battlers):
+		# 4 eri array -> [ [],[].. jne ]
+		var dirs = []
+		# common array.clear() deletes from dirs[] ??
+		# oikee
+		var tilesR = []
+		for i in range(radius):
+			var wallCheck = space.intersect_point(tm.map_to_world(start + Vector2(i+1,0)) + tileOffset, 32, excludes, 0x7FFFFFFF, true, collideArea2d)
+			if wallCheck:
+				var wall = RID(wallCheck[0]["rid"])
+				if !wall.get_id() in battlers:
+					break
+				else:
+					tilesR.append(start + Vector2(i+1,0))
+					break
+			else:
+				tilesR.append(start + Vector2(i+1,0))
+		dirs.append(tilesR)
+		# vasen
+		var tilesL = []
+		for i in range(radius):
+			var wallCheck = space.intersect_point(tm.map_to_world(start - Vector2(i+1,0)) + tileOffset, 32, excludes, 0x7FFFFFFF, true, collideArea2d)
+			if wallCheck:
+				var wall = RID(wallCheck[0]["rid"])
+				if !wall.get_id() in battlers:
+					break
+				else:
+					tilesL.append(start - Vector2(i+1,0))
+					break
+			else:
+				tilesL.append(start - Vector2(i+1,0))
+		dirs.append(tilesL)
+		#tiles.clear()
+		# up
+		var tilesU = []
+		for i in range(radius):
+			var wallCheck = space.intersect_point(tm.map_to_world(start - Vector2(0,i+1)) + tileOffset, 32, excludes, 0x7FFFFFFF, true, collideArea2d)
+			if wallCheck:
+				var wall = RID(wallCheck[0]["rid"])
+				if !wall.get_id() in battlers:
+					break
+				else:
+					tilesU.append(start - Vector2(0,i+1))
+					break
+			else:
+				tilesU.append(start - Vector2(0,i+1))
+		#if tilesU.size() < radius:
+		#	var backTile = tilesU.back()
+		#	tilesU.append(backTile - Vector2(0,1))
+		dirs.append(tilesU)
+		#tiles.clear()
+#		# down
+		var tilesD = []
+		for i in range(radius):
+			var wallCheck = space.intersect_point(tm.map_to_world(start + Vector2(0,i+1)) + tileOffset, 32, excludes, 0x7FFFFFFF, true, collideArea2d)
+			if wallCheck:
+				var wall = RID(wallCheck[0]["rid"])
+				if !wall.get_id() in battlers:
+					break
+				else:
+					tilesD.append(start + Vector2(0,i+1))
+					break
+			else:
+				tilesD.append(start + Vector2(0,i+1))
+		dirs.append(tilesD)
+#		#tiles.clear()
+		return dirs

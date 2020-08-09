@@ -13,10 +13,10 @@ func NextTurn():
 				usedList.append(next)
 				waitList.pop_front()
 			else:
-				print(next.stats.job)
 				return waitList.front()
 	else:
 		waitList = GetCombatants()
+		waitList.sort_custom(self, "custom_array_sort")
 		return waitList.front()
 		
 func Setup():
@@ -29,8 +29,7 @@ func Setup():
 	waitList.sort_custom(self, "custom_array_sort")
 	
 func custom_array_sort(a , b):
-	if a.stats.speed > b.stats.speed:
-		return a > b
+	return a.stats.speed > b.stats.speed
 
 func GetFirstCharacater():
 	if not waitList.empty():
@@ -58,6 +57,15 @@ func RemoveFromQueue(character):
 	if character in waitList:
 		waitList.erase(character)
 
+func GetCurrentCharacter():
+	if !waitList.empty():
+		return waitList[0]
 
-
-
+func GetAllBattlers():
+	var battlers = []
+	var nChild = get_child_count()
+	for n in nChild:
+		var characters = get_child(n).get_children()
+		for c in characters:
+			battlers.append(c)
+	return battlers

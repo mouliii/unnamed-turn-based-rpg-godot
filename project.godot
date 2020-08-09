@@ -14,26 +14,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scenes/Stats/Job.gd"
 }, {
-"base": "Node",
-"class": "Skills",
-"language": "GDScript",
-"path": "res://scenes/Stats/Skills.gd"
-}, {
 "base": "Resource",
 "class": "StartingStats",
 "language": "GDScript",
 "path": "res://scenes/Stats/StartingStats.gd"
 }, {
 "base": "Node",
-"class": "Stats",
+"class": "StatusEffects",
 "language": "GDScript",
-"path": "res://scenes/Stats/Stats.gd"
+"path": "res://other_scripts/StatusEffects.gd"
 } ]
 _global_script_class_icons={
 "Job": "",
-"Skills": "",
 "StartingStats": "",
-"Stats": ""
+"StatusEffects": ""
 }
 
 [application]
@@ -46,13 +40,6 @@ config/icon="res://icon.png"
 
 Astar="*res://other_scripts/astar.gd"
 DataImport="*res://res/Data/DataImport.gd"
-UserData="*res://addons/github-integration/scripts/user_data.gd"
-IconLoaderGithub="*res://addons/github-integration/scripts/IconLoaderGithub.gd"
-RestHandler="*res://addons/github-integration/scripts/RestHandler.gd"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "github-integration" )
 
 [input]
 

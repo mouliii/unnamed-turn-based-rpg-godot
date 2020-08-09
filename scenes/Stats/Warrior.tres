@@ -5,10 +5,10 @@
 [resource]
 script = ExtResource( 1 )
 job_name = "Warrior"
-maxHp = 100
+maxHp = 300
 maxMp = 40
-strength = 10
+strength = 9
 intelligence = 2
 agility = 4
-defence = 100
+defence = 50
 speed = 6

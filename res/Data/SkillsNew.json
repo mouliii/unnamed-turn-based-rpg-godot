@@ -1,0 +1,225 @@
+{
+  "Power Shot": {
+	"name": "Power Shot",
+	"damage": 25,
+	"cost": 2,
+	"modifierStat":"agility",
+	"statDmgModifier": 0.4,
+	"totalCooldown": 0,
+	"currentCooldown": 0,
+	"type": "damage",
+	"selfTarget": 1,
+	"targeting": {
+		"type": "line",
+		"range": 6,
+		"pierce": 1,
+		"splashRange": 0
+	},
+	"statusEffect":{
+	}
+  },
+   "Stab": {
+	"name": "Stab",
+	"damage": 25,
+	"cost": 2,
+	"modifierStat":"agility",
+	"statDmgModifier": 0.4,
+	"totalCooldown": 0,
+	"currentCooldown": 0,
+	"type": "damage",
+	"targeting": {
+		"type": "ranged",
+		"range": 1,
+		"splashRange": 0,
+		"diagonal": 1
+	},
+	"selfTarget": 0,
+	"statusEffect":{
+		"applyChance": 0.5,
+		"name": "Bleed",
+		"isBeneficial": 0,
+		"entryEffect": [],
+		"tickEffect": ["dot", 0.2],
+		"onLeaveEffect":[],
+		"turns": 2
+	}
+   },
+   "Shadowstep": {
+	"name": "Shadowstep",
+	"damage": 5,
+	"cost": 2,
+	"modifierStat":"agility",
+	"statDmgModifier": 0.4,
+	"totalCooldown": 0,
+	"currentCooldown": 0,
+	"type": "damage",
+	"targeting": {
+		"type": "ranged",
+		"range": 3,
+		"splashRange": 0,
+		"diagonal": 1
+	},
+	"selfTarget": 0,
+	"specialEffect": "teleport",
+	"statusEffect":{
+		"applyChance": 1.0,
+		"name": "Stun",
+		"isBeneficial": 0,
+		"entryEffect": ["stun", 1],
+		"tickEffect": [],
+		"onLeaveEffect":[],
+		"turns": 1
+	}
+   },
+   "Charge": {
+	"name": "Charge",
+	"damage": 5,
+	"cost": 2,
+	"modifierStat":"strength",
+	"statDmgModifier": 0.4,
+	"totalCooldown": 0,
+	"currentCooldown": 0,
+	"type": "damage",
+	"targeting": {
+		"type": "line",
+		"pierce": 0,
+		"range": 10,
+		"splashRange": 0,
+		"diagonal": 0
+	},
+	"selfTarget": 0,
+	"specialEffect": "charge",
+	"statusEffect":{
+		"applyChance": 1.0,
+		"name": "root",
+		"isBeneficial": 0,
+		"entryEffect": ["root", 1],
+		"tickEffect": [],
+		"onLeaveEffect":[],
+		"turns": 1
+	}
+   },
+   "Fireball": {
+	"name": "Fireball",
+	"damage": 25,
+	"cost": 2,
+	"type": "damage",
+	"modifierStat":"intelligence",
+	"statDmgModifier": 0.4,
+	"totalCooldown": 0,
+	"currentCooldown": 0,
+	"selfTarget": 1,
+	"targeting": {
+		"type": "ranged",
+		"range": 4,
+		"splashRange": 1,
+		"diagonal": 0
+	},
+	"statusEffect":{
+		"applyChance": 0.3,
+		"name": "Burn",
+		"isBeneficial": 0,
+		"entryEffect": [],
+		"tickEffect": ["dot", 0.2],
+		"onLeaveEffect":["dot", 1.0],
+		"turns": 3
+	},
+  },
+   "Whirlwind": {
+	"name": "Whirlwind",
+	"damage": 25,
+	"cost": 2,
+	"selfTarget": 0,
+	"modifierStat":"strength",
+	"statDmgModifier": 0.4,
+	"totalCooldown": 0,
+	"currentCooldown": 0,
+	"type": "damage",
+	"targeting": {
+		"type": "ranged",
+		"range": 0,
+		"splashRange": 1,
+		"diagonal": 1
+	},
+	"statusEffect":{
+	}
+   },
+   "Storm bolt": {
+	"name": "Storm bolt",
+	"damage": 30,
+	"cost": 3,
+	"type": "damage",
+	"modifierStat":"strength",
+	"statDmgModifier": 0.4,
+	"totalCooldown": 5,
+	"currentCooldown": 0,
+	"selfTarget": 0,
+	"targeting": {
+		"type": "ranged",
+		"range": 4,
+		"splashRange": 0,
+		"diagonal": 0
+	},
+	"statusEffect":{
+		"applyChance": 1.0,
+		"name": "Stun",
+		"isBeneficial": 0,
+		"entryEffect": ["stun", 2],
+		"tickEffect": [],
+		"onLeaveEffect":[],
+		"turns": 0
+	}
+  },
+   "Entangling Roots": {
+	"name": "Entangling Roots",
+	"damage": 10,
+	"cost": 3,
+	"type": "damage",
+	"modifierStat":"intelligence",
+	"statDmgModifier": 0.4,
+	"totalCooldown": 4,
+	"currentCooldown": 0,
+	"selfTarget": 0,
+	"targeting": {
+		"type": "ranged",
+		"range": 4,
+		"splashRange": 0,
+		"diagonal": 0
+	},
+	"statusEffect":{
+		"applyChance": 1.0,
+		"name": "Roots",
+		"isBeneficial": 0,
+		"entryEffect": ["root", 3],
+		"tickEffect": ["dot", 2.0],
+		"onLeaveEffect":[],
+		"turns": 2
+	}
+  },
+   "Sandstorm": {
+	"name": "Sandstorm",
+	"damage": 10,
+	"cost": 3,
+	"type": "damage",
+	"modifierStat":"intelligence",
+	"statDmgModifier": 0.4,
+	"totalCooldown": 4,
+	"currentCooldown": 0,
+	"selfTarget": 1,
+	"targeting": {
+		"type": "ranged",
+		"range": 4,
+		"splashRange": 2,
+		"diagonal": 0
+	},
+	"statusEffect":{
+		"applyChance": 1.0,
+		"name": "Slow",
+		"isBeneficial": 0,
+		"entryEffect": ["slow", 2],
+		"tickEffect": [],
+		"onLeaveEffect":[],
+		"turns": 2
+	}
+  }
+}
