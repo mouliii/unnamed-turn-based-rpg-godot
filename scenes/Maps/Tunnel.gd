@@ -6,25 +6,30 @@ const roomMinSize = 5
 const roomMaxSize = 10
 const maximumTries = 10
 
+var enemySpawnPoints = []
 var rooms = []
-
+var playerSpawnPoint
+var endPoint
+# TODO
+# AStarilla check jos osuu jo tehtyy tunnelii, ettei tuu tyhmän näkösiä viivoja ?
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GenerateMap()
 	
-func _unhandled_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.pressed:
-			rooms.clear()
-			$TileMap.clear()
-			GenerateMap()
-			
+#func _unhandled_input(event):
+#	if event is InputEventMouseButton:
+#		if event.button_index == BUTTON_LEFT and event.pressed:
+#			rooms.clear()
+#			$TileMap.clear()
+#			GenerateMap()
+#
 func GenerateMap():
 	randomize()
 	
-	var roomSize = Vector2(int( rand_range(roomMinSize,roomMaxSize) ), int(rand_range(roomMinSize,roomMaxSize)) )
+	var roomSize = Vector2(round( rand_range(roomMinSize,roomMaxSize) ), round(rand_range(roomMinSize,roomMaxSize)) )
 	var pos = Vector2(int(rand_range(0,mapSize.x - roomSize.x)), int(rand_range(0,mapSize.y - roomSize.y)) )
 	var room = Rect2(pos,roomSize)
+	playerSpawnPoint = Vector2( round(room.position.x + room.size.x / 2), round(room.position.y + room.size.y / 2))
 	rooms.append(room)
 	
 	for _i in range(nRooms-1):
@@ -46,14 +51,16 @@ func GenerateMap():
 					room.position = pos
 					not_colliding = false
 					badRoom = true
-		yield(get_tree().create_timer(0.5), "timeout")
+#		yield(get_tree().create_timer(0.5), "timeout")
 		if not badRoom:
 			rooms.append(room)
+			# TODO chance tai jtn
+			enemySpawnPoints.append(Vector2( round(room.position.x + room.size.x / 2), round(room.position.y + room.size.y / 2)))
 			# TODO - poista, demo mite generoi
-			for room in rooms:
-				for x in range(room.size.x):
-					for y in range(room.size.y):
-						$TileMap.set_cellv(Vector2(room.position.x+x,room.position.y+y), 1)
+#			for room in rooms:
+#				for x in range(room.size.x):
+#					for y in range(room.size.y):
+#						$TileMap.set_cellv(Vector2(room.position.x+x,room.position.y+y), 1)
 		# käytävät
 		var centreX = rooms[-1].position.x + rooms[-1].size.x / 2
 		var centreY = rooms[-1].position.y + rooms[-1].size.y / 2
@@ -93,6 +100,16 @@ func GenerateMap():
 				$TileMap.set_cell(room.position.x - 1, y, 2)
 			if $TileMap.get_cell(room.position.x + room.size.x, y) == -1:
 				$TileMap.set_cell(room.position.x + room.size.x, y, 2)
+				
+		$TileMap.set_cell(playerSpawnPoint.x,playerSpawnPoint.y, 0)
+		endPoint = Vector2( round(rooms[-1].position.x + rooms[-1].size.x / 2), round(rooms[-1].position.y + rooms[-1].size.y / 2))
+		$TileMap.set_cell(endPoint.x,endPoint.y, 0)
+		
+	# fill gaps
+	for x in range(mapSize.x):
+		for y in range(mapSize.y):
+			if $TileMap.get_cell(x,y) == -1:
+				$TileMap.set_cell(x,y, 3)
 
 func CheckNeighbours(x, y):
 	#vasen
@@ -108,11 +125,14 @@ func CheckNeighbours(x, y):
 	if $TileMap.get_cell(x,y+1) == -1:
 		$TileMap.set_cell(x,y+1,2)
 
+func GetPlayerSpawnPoint():
+	return playerSpawnPoint
+	
+func GetEndPoint():
+	return endPoint
 
-
-
-
-
+func GetEnemySpawnPoints():
+	return enemySpawnPoints
 
 
 

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://scenes/Stats/StartingStats.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+job_name = "Orc"
+maxHp = 200
+maxMp = 100
+strength = 3
+intelligence = 1
+agility = 2
+defence = 25
+speed = 4

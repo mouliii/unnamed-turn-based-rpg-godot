@@ -93,7 +93,7 @@
 		"applyChance": 1.0,
 		"name": "root",
 		"isBeneficial": 0,
-		"entryEffect": ["root", 1],
+		"entryEffect": ["root", 3],
 		"tickEffect": [],
 		"onLeaveEffect":[],
 		"turns": 1
@@ -164,7 +164,7 @@
 		"applyChance": 1.0,
 		"name": "Stun",
 		"isBeneficial": 0,
-		"entryEffect": ["stun", 2],
+		"entryEffect": ["stun", 1],
 		"tickEffect": [],
 		"onLeaveEffect":[],
 		"turns": 0

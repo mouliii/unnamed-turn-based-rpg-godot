@@ -48,20 +48,20 @@ func EquidBasicArmor():
 		"headArmor":{"armor": 12, "strength": 1, "hp": 37},
 		"chestArmor": {"armor": 25, "strength": 2, "hp": 75},
 		"legArmor": {"armor": 13, "strength": 1, "hp": 38},
-		"mainHand": {"damage": 50, "handling": "2h", "type": "sword", "cost": 3, "strength": 3, "hp": 20}
+		"mainHand": {"damage": 100, "handling": "2h", "type": "sword", "range": 1, "strength": 3, "hp": 20}
 		},
 		"mage":{
 		"headArmor":{"armor": 12, "intelligence":1, "hp": 37},
 		"chestArmor": {"armor": 25, "intelligence":2, "hp": 75},
 		"legArmor": {"armor": 13, "intelligence":1, "hp": 38},
-		"mainHand": {"damage": 20, "handling": "2h", "type": "staff", "cost": 2, "intelligence":3, "hp": 20}
+		"mainHand": {"damage": 20, "handling": "2h", "type": "staff", "range": 1, "intelligence":3, "hp": 20}
 		},
 		"rogue":{
 		"headArmor":{"armor": 12, "agility": 1, "hp": 37},
 		"chestArmor": {"armor": 25, "agility": 2, "hp": 75},
 		"legArmor": {"armor": 13, "agility": 1, "hp": 38},
-		"mainHand": {"damage": 15, "handling": "1h", "type": "dagger", "cost": 2, "agility": 1, "hp": 10},
-		"offHand": {"damage": 15, "handling": "1h", "type": "dagger", "cost": 2, "agility": 1, "hp": 5}
+		"mainHand": {"damage": 15, "handling": "1h", "type": "dagger", "range": 1, "agility": 1, "hp": 10},
+		"offHand": {"damage": 15, "handling": "1h", "type": "dagger", "range": 1, "agility": 1, "hp": 5}
 		}
 	}
 	return armors

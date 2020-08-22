@@ -143,12 +143,12 @@ class BFS:
 						checked = true
 						var result = space.intersect_ray(
 							tm.map_to_world(Vector2(curParent.x - 1,curParent.y)) + tileOffset,
-							tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, exclusives, 2147483647, true, collideArea2d)
+							tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, exclusives, 1, true, collideArea2d)
 						if result:
 							t1 = true
 						result = space.intersect_ray(
 							tm.map_to_world(Vector2(curParent.x,curParent.y + 1)) + tileOffset,
-							tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, exclusives, 2147483647, true, collideArea2d)
+							tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, exclusives, 1, true, collideArea2d)
 						if result:
 							t2 = true
 						if t1 and t2:
@@ -158,7 +158,7 @@ class BFS:
 								skip = true
 				if not checked:
 					var result = space.intersect_ray( tm.map_to_world(Vector2(curParent.x,curParent.y)) + tileOffset,
-								tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, exclusives, 2147483647, true, collideArea2d)
+								tm.map_to_world(Vector2(i.x,i.y)) + tileOffset, exclusives, 1, true, collideArea2d)
 					if result:
 						skip = true
 					
@@ -180,7 +180,7 @@ class BFS:
 		# oikee
 		var tilesR = []
 		for i in range(radius):
-			var wallCheck = space.intersect_point(tm.map_to_world(start + Vector2(i+1,0)) + tileOffset, 32, excludes, 0x7FFFFFFF, true, collideArea2d)
+			var wallCheck = space.intersect_point(tm.map_to_world(start + Vector2(i+1,0)) + tileOffset, 32, excludes, 0x0000001, true, collideArea2d)
 			if wallCheck:
 				var wall = RID(wallCheck[0]["rid"])
 				if !wall.get_id() in battlers:
@@ -194,7 +194,7 @@ class BFS:
 		# vasen
 		var tilesL = []
 		for i in range(radius):
-			var wallCheck = space.intersect_point(tm.map_to_world(start - Vector2(i+1,0)) + tileOffset, 32, excludes, 0x7FFFFFFF, true, collideArea2d)
+			var wallCheck = space.intersect_point(tm.map_to_world(start - Vector2(i+1,0)) + tileOffset, 32, excludes, 0x0000001, true, collideArea2d)
 			if wallCheck:
 				var wall = RID(wallCheck[0]["rid"])
 				if !wall.get_id() in battlers:
@@ -209,7 +209,7 @@ class BFS:
 		# up
 		var tilesU = []
 		for i in range(radius):
-			var wallCheck = space.intersect_point(tm.map_to_world(start - Vector2(0,i+1)) + tileOffset, 32, excludes, 0x7FFFFFFF, true, collideArea2d)
+			var wallCheck = space.intersect_point(tm.map_to_world(start - Vector2(0,i+1)) + tileOffset, 32, excludes, 0x0000001, true, collideArea2d)
 			if wallCheck:
 				var wall = RID(wallCheck[0]["rid"])
 				if !wall.get_id() in battlers:
@@ -227,7 +227,7 @@ class BFS:
 #		# down
 		var tilesD = []
 		for i in range(radius):
-			var wallCheck = space.intersect_point(tm.map_to_world(start + Vector2(0,i+1)) + tileOffset, 32, excludes, 0x7FFFFFFF, true, collideArea2d)
+			var wallCheck = space.intersect_point(tm.map_to_world(start + Vector2(0,i+1)) + tileOffset, 32, excludes, 0x0000001, true, collideArea2d)
 			if wallCheck:
 				var wall = RID(wallCheck[0]["rid"])
 				if !wall.get_id() in battlers:

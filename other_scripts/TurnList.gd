@@ -24,6 +24,8 @@ func Setup():
 	for n in nChild:
 		var characters = get_child(n).get_children()
 		for c in characters:
+			if !c.inCombat:
+				continue
 			if c.stats.hp > 0:
 				waitList.append(c)
 	waitList.sort_custom(self, "custom_array_sort")
@@ -43,6 +45,8 @@ func GetCombatants():
 	for n in nChild:
 		var characters = get_child(n).get_children()
 		for c in characters:
+			if !c.inCombat:
+				continue
 			if c.stats.hp > 0:
 				battlers.append(c)
 	return battlers
@@ -69,3 +73,14 @@ func GetAllBattlers():
 		for c in characters:
 			battlers.append(c)
 	return battlers
+
+func AddToQueue(character):
+	waitList.append(character)
+
+
+
+
+
+
+
+
