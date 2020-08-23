@@ -12,6 +12,7 @@ onready var combatMenu = $CanvasLayer/CombatActions/CombatMenu
 onready var skillMenu = $CanvasLayer/CombatActions/SkillList
 onready var fb = preload("res://scenes/SkillVisuals/Fireball.tscn")
 var mapData
+var swordIcon = load("res://res/textures/icons/swordicon.png")
 
 var lastMousePos = Vector2.ZERO # tile
 enum {MENU, MOVE, ATTACK, SKILL, ITEM, ENDTURN}
@@ -71,6 +72,13 @@ func _process(_delta):
 					if !path.empty():
 						$Line2D.points = path
 						$Line2D.add_point(activeCharacter.position, 0)
+				var space = get_world_2d().direct_space_state
+				var check = astar.CheckPoint($TileMap.world_to_map(get_global_mouse_position()),
+											$TileMap, space, [], true)
+				if "Enemy" in check:
+					Input.set_custom_mouse_cursor(swordIcon)
+				else:
+					Input.set_custom_mouse_cursor(null)
 						
 			ATTACK:
 				$TileMap/TargetMap.clear()
@@ -113,13 +121,13 @@ func _unhandled_input(event):
 							$TurnSystem/PlayerParty/Player.StopMoving()
 					$Line2D.clear_points()
 					$TileMap/TargetMap.clear()
-					Action = MENU
+					Action = MOVE
 				ATTACK:
 					$TileMap/TargetMap.clear()
-					Action = MENU
+					Action = MOVE
 				SKILL:
 					$TileMap/TargetMap.clear()
-					Action = MENU
+					Action = MOVE
 			if activeSkill != null:
 					skillArea.clear()
 					$TileMap/TargetMap.clear()
@@ -132,14 +140,30 @@ func _unhandled_input(event):
 		if event.button_index == BUTTON_LEFT and event.pressed:
 			match Action:
 				MOVE:
+					var enemy = null
+					var space = get_world_2d().direct_space_state
+					var check = astar.CheckPoint($TileMap.world_to_map(get_global_mouse_position()),
+												$TileMap, space, [], true)
+					if "Enemy" in check:
+						GetAttackArea()
+						enemy = $TurnSystem/EnemyParty.get_node(check)
+						for pos in highlightAreaBuffer:
+							if pos == $TileMap.world_to_map(enemy.position):
+								Action = ATTACK
+								OnDamageTaken(enemy)
+								EndTurn()
+								return
+						
 					var characterPath
 					if inCombat:
 						characterPath = GetPath(activeCharacter.position, get_global_mouse_position(), 50, [])
-						activeCharacter.MoveToPoint(characterPath[0], 0.05)
-						EndTurn()
+						if !characterPath.empty():
+							activeCharacter.MoveToPoint(characterPath[0], 0.05)
+							EndTurn()
 					else:
 						characterPath = GetPath(activeCharacter.position, get_global_mouse_position(), 50, [])
-						activeCharacter.Move(characterPath)
+						if !characterPath.empty():
+							activeCharacter.Move(characterPath)
 					#Action = MENU
 					#$Line2D.clear_points()
 				ATTACK:
@@ -187,7 +211,7 @@ func GetPath(pos_in_world_from : Vector2, pos_in_world_to,steps, excludes, check
 			worldPath.append($TileMap.map_to_world(point) + halfCell)
 	else:
 		#print("F")
-		return null
+		return []
 	return worldPath
 	
 func GetArea(pos_in_world : Vector2, _range, diagonal : bool, excludes, cornercut = false, collideArea2d = false):
@@ -199,24 +223,14 @@ func GetLine(pos_in_world : Vector2, _range, excludes, collideArea2d):
 	return bfs.GetLine($TileMap.world_to_map(pos_in_world), _range, space, excludes, collideArea2d, battlerIDs)
 
 func _on_Attack_btn_pressed():
-	$TileMap/TargetMap.clear()
-	match activeCharacter.gear.mainHand.handling:
-		"1h":
-			highlightAreaBuffer = GetArea(activeCharacter.position, 1, 1, [], true)
-		"2h":
-			if activeCharacter.stats.job == "Mage":
-				highlightAreaBuffer = GetArea(activeCharacter.position, 4, 0, [], true)
-			else:
-				highlightAreaBuffer = GetArea(activeCharacter.position, 1, 1, [], true)
-	highlightAreaBuffer.pop_front()
-	for tile in highlightAreaBuffer:
-		$TileMap/TargetMap.set_cellv(tile, 0)
+	GetAttackArea()
 	Action = ATTACK
 
 func _on_EndTurn_btn_pressed():
 	EndTurn()
 	
 func EndTurn():
+	Action = MOVE
 	$Line2D.clear_points()
 	$TileMap/TargetMap.clear()
 	activeCharacter = TurnSystem.NextTurn()
@@ -243,9 +257,7 @@ func EndTurn():
 			break
 	UpdateTurnQue()
 	UpdateEntityID()
-	# TODO
-	if activeCharacter.is_in_group("playerParty"):
-		Action = MOVE
+	# TODO <- ?
 	if activeCharacter.is_in_group("enemyParty"):
 		# looppaa playeri tyypit
 		var moveDistance
@@ -490,7 +502,19 @@ func UpdateVision():
 	var space = get_world_2d().direct_space_state
 	MapManager.UpdateVision($TurnSystem/PlayerParty/Player.position, $TurnSystem/PlayerParty/Player.sightRadius, space)
 
-
+func GetAttackArea():
+	$TileMap/TargetMap.clear()
+	match activeCharacter.gear.mainHand.handling:
+		"1h":
+			highlightAreaBuffer = GetArea(activeCharacter.position, 1, 1, [], true)
+		"2h":
+			if activeCharacter.stats.job == "Mage":
+				highlightAreaBuffer = GetArea(activeCharacter.position, 4, 0, [], true)
+			else:
+				highlightAreaBuffer = GetArea(activeCharacter.position, 1, 1, [], true)
+	highlightAreaBuffer.pop_front()
+	for tile in highlightAreaBuffer:
+		$TileMap/TargetMap.set_cellv(tile, 0)
 
 
 

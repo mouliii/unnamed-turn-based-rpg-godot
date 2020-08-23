@@ -77,7 +77,7 @@ func _process(_delta):
 	
 func Move(_path):
 	path = _path
-	if path != null:
+	if path != null or !path.empty():
 		state = MOVING
 		tween.interpolate_property(self, "position", position, path.front(), 0.05, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
 		tween.start()

@@ -107,11 +107,11 @@ func ReduceAP(val):
 	currentAP -= val
 
 func TakeDmg(damage : int, type : String):
-	var dmgToTake = (damage * damage) / (damage + stats.defence)
+	#var dmgToTake = (damage * damage) / (damage + stats.defence)
 	if type == "hot" or type == "heal":
-		stats.hp += dmgToTake
+		stats.hp += damage
 	elif type == "dot" or type == "damage":
-		stats.hp -= dmgToTake
+		stats.hp -= damage
 	# hp bar update
 	HpBarUpdate()
 	if stats.hp <= 0:
@@ -157,7 +157,7 @@ var armors = {
 		"headArmor":{"armor": 0, "strength": 1, "hp": 0},
 		"chestArmor": {"armor": 15, "strength": 2, "hp": 50},
 		"legArmor": {"armor": 10, "strength": 1, "hp": 20},
-		"mainHand": {"damage": 20, "handling": "2h", "type": "club", "range": 1, "strength": 3, "hp": 20}
+		"mainHand": {"damage": 50, "handling": "2h", "type": "club", "range": 1, "strength": 3, "hp": 20}
 		}
 
 func Draw(canSee : bool):
