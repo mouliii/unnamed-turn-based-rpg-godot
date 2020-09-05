@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://res/textures/tilset.png" type="Texture" id=1]
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=2]
@@ -7,7 +7,8 @@
 [ext_resource path="res://other_scripts/Camera.gd" type="Script" id=5]
 [ext_resource path="res://res/textures/DungeonTileset.tres" type="TileSet" id=6]
 [ext_resource path="res://scenes/Stats/Warrior.tres" type="Resource" id=7]
-[ext_resource path="res://scenes/CombatActions.tscn" type="PackedScene" id=9]
+[ext_resource path="res://other_scripts/GUI.gd" type="Script" id=8]
+[ext_resource path="res://scenes/ActionBar.tscn" type="PackedScene" id=10]
 
 [sub_resource type="TileSet" id=1]
 0/name = "tilset.png 0"
@@ -97,26 +98,14 @@ script = ExtResource( 5 )
 
 [node name="Line2D" type="Line2D" parent="."]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="GUI" type="CanvasLayer" parent="."]
+script = ExtResource( 8 )
 
-[node name="CombatActions" parent="CanvasLayer" instance=ExtResource( 9 )]
-
-[node name="TurnOrder" type="VBoxContainer" parent="CanvasLayer"]
-margin_left = 119.732
-margin_top = 267.157
-margin_right = 159.732
-margin_bottom = 307.157
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="ActionBar" parent="GUI" instance=ExtResource( 10 )]
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 0, 1 )
 collide_with_areas = true
-[connection signal="pressed" from="CanvasLayer/CombatActions/CombatMenu/Move_btn" to="." method="_on_Move_btn_pressed"]
-[connection signal="pressed" from="CanvasLayer/CombatActions/CombatMenu/Attack_btn" to="." method="_on_Attack_btn_pressed"]
-[connection signal="pressed" from="CanvasLayer/CombatActions/CombatMenu/Skills_btn" to="." method="_on_Skills_btn_pressed"]
-[connection signal="pressed" from="CanvasLayer/CombatActions/CombatMenu/EndTurn_btn" to="." method="_on_EndTurn_btn_pressed"]
 
-[editable path="CanvasLayer/CombatActions"]
+[editable path="GUI/ActionBar"]

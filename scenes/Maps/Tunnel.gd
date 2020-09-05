@@ -55,6 +55,7 @@ func GenerateMap():
 		if not badRoom:
 			rooms.append(room)
 			# TODO chance tai jtn
+			#if _i < nRooms-1:
 			enemySpawnPoints.append(Vector2( round(room.position.x + room.size.x / 2), round(room.position.y + room.size.y / 2)))
 			# TODO - poista, demo mite generoi
 #			for room in rooms:
@@ -103,7 +104,7 @@ func GenerateMap():
 				
 		$TileMap.set_cell(playerSpawnPoint.x,playerSpawnPoint.y, 0)
 		endPoint = Vector2( round(rooms[-1].position.x + rooms[-1].size.x / 2), round(rooms[-1].position.y + rooms[-1].size.y / 2))
-		$TileMap.set_cell(endPoint.x,endPoint.y, 0)
+		$TileMap.set_cell(endPoint.x,endPoint.y, 4)
 		
 	# fill gaps
 	for x in range(mapSize.x):

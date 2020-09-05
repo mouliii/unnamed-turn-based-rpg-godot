@@ -8,15 +8,14 @@ var tunnelMap
 onready var MapSystem = load("res://other_scripts/ShadowCasting.gd")
 var MapManager 
 onready var TurnSystem = $TurnSystem
-onready var combatMenu = $CanvasLayer/CombatActions/CombatMenu
-onready var skillMenu = $CanvasLayer/CombatActions/SkillList
 onready var fb = preload("res://scenes/SkillVisuals/Fireball.tscn")
+onready var gui = $GUI
 var mapData
 var swordIcon = load("res://res/textures/icons/swordicon.png")
 
 var lastMousePos = Vector2.ZERO # tile
-enum {MENU, MOVE, ATTACK, SKILL, ITEM, ENDTURN}
-var Action = MENU
+enum {MENU, MOVE, ATTACK, SKILL, ITEM, ENDTURN, ENEMYTURN}
+var Action = MOVE
 var battlerIDs = []
 var inCombat = false
 
@@ -27,8 +26,9 @@ var skillActivated = false
 var activeSkill = null
 
 # joku const reference _readyssä pelaajaa
-# kuolleet tyypit toiselle collision layerille ?
 # need target -spell juttu ja check ennen ondamageupdate()
+# JOS SKILLI AKTIIVINEN JA ATTACK ICON NÄKYY SKIPPAANTUU VUORO
+# 
 
 func _ready():
 	tunnelMap = tunnelAlgorithm.instance()
@@ -37,7 +37,18 @@ func _ready():
 	MapManager.Setup($TileMap, tunnelMap.get_child(0))
 	MapManager.ResetVisionMap()
 	var e = load("res://scenes/Enemy.tscn")
-	for point in tunnelMap.GetEnemySpawnPoints().size():
+	var boss = e.instance()
+	boss._ready()
+	var bossStats = load("res://scenes/Stats/Boss.tres")
+	boss.stats.initialize(bossStats)
+	boss.gear.mainHand.damage = 100
+	boss.get_node("Sprite").region_rect = Rect2(48,176,16,16)
+	boss.position = $TileMap.map_to_world(tunnelMap.enemySpawnPoints[-1]) + $TileMap.cell_size / 2
+	boss.add_to_group("enemyParty")
+	TurnSystem.get_node("EnemyParty").add_child(boss)
+	$TurnSystem/EnemyParty.get_child(0).stats.initialize(bossStats)
+	$Camera2D.target = $TurnSystem/EnemyParty.get_child(0)
+	for point in tunnelMap.GetEnemySpawnPoints().size() - 1:
 		var enemy = e.instance()
 		enemy.position = $TileMap.map_to_world(tunnelMap.enemySpawnPoints[point]) + $TileMap.cell_size / 2
 		enemy.add_to_group("enemyParty")
@@ -56,10 +67,10 @@ func _ready():
 	playernode.connect("stepUpdate", self, "UpdateVision")
 	# TODO - menee seinien läpi
 	UpdateVision()
+	gui.LoadShortcuts($TurnSystem/PlayerParty/Player.learnedSkills)
 
 # aktiiviset jutut, kuten pathfind hiiren lokaatioon
 func _process(_delta):
-	CheckEnemyLOS()
 	if lastMousePos != $TileMap.world_to_map(get_global_mouse_position() ):
 		lastMousePos = $TileMap.world_to_map(get_global_mouse_position() )
 		match Action:
@@ -106,11 +117,11 @@ func _process(_delta):
 						for tile in highlightAreaBuffer:
 							$TileMap/TargetMap.set_cellv(tile, 0)
 	
-# kerran tarvittavat, kuten skillin alueen aktivointi
+# kerran tarvittavat, kuten spellin heittäminen
 func _unhandled_input(event):
+	var space = get_world_2d().direct_space_state
 	
 	if event is InputEventMouseButton:
-		# LINE OF SIGHT !!!!!
 		if event.button_index == BUTTON_RIGHT and event.pressed:
 			match Action:
 				MENU:
@@ -132,16 +143,11 @@ func _unhandled_input(event):
 					skillArea.clear()
 					$TileMap/TargetMap.clear()
 					activeSkill = null
-			if !combatMenu.visible:
-				skillMenu.hide()
-				combatMenu.show()
-				$TileMap/TargetMap.clear()
 		
 		if event.button_index == BUTTON_LEFT and event.pressed:
 			match Action:
 				MOVE:
 					var enemy = null
-					var space = get_world_2d().direct_space_state
 					var check = astar.CheckPoint($TileMap.world_to_map(get_global_mouse_position()),
 												$TileMap, space, [], true)
 					if "Enemy" in check:
@@ -152,6 +158,7 @@ func _unhandled_input(event):
 								Action = ATTACK
 								OnDamageTaken(enemy)
 								EndTurn()
+					# return muuten liikkuu vihun päälle
 								return
 						
 					var characterPath
@@ -164,36 +171,32 @@ func _unhandled_input(event):
 						characterPath = GetPath(activeCharacter.position, get_global_mouse_position(), 50, [])
 						if !characterPath.empty():
 							activeCharacter.Move(characterPath)
-					#Action = MENU
-					#$Line2D.clear_points()
 				ATTACK:
-					for pos in highlightAreaBuffer:
-						if $TileMap.world_to_map(get_global_mouse_position()) == pos:
-							var battlers = TurnSystem.GetCombatants()
-							for areaPos in skillArea:
-								for battler in battlers:
-									if areaPos == $TileMap.world_to_map(battler.position):
-										OnDamageTaken(battler)
-										EndTurn()
-										break
-							break
-				SKILL:
-					if activeCharacter.currentAP >= activeSkill.cost:
-						for pos in highlightAreaBuffer:
-							if $TileMap.world_to_map(get_global_mouse_position()) == pos:
-								if activeSkill.name == "Fireball":
-									var ball = fb.instance()
-									ball.init(activeCharacter.position, get_global_mouse_position())
-									add_child(ball)
-									#yield(get_node("Fireball"),"tree_exited") # ei tee dmg ????
-								var battlers = TurnSystem.GetCombatants()
-								for areaPos in skillArea:
-									for battler in battlers:
-										if areaPos == $TileMap.world_to_map(battler.position):
-											OnDamageTaken(battler)
-											EndTurn()
-											break
+					var battlers = TurnSystem.GetCombatants()
+					for areaPos in skillArea:
+						for battler in battlers:
+							if areaPos == $TileMap.world_to_map(battler.position):
+								OnDamageTaken(battler)
+								EndTurn()
 								break
+				SKILL:
+					var battlers
+					if !$TurnSystem/PlayerParty/Player.inCombat:
+						for pos in skillArea:
+							CheckCollision(pos, space)
+					battlers = TurnSystem.GetCombatants()
+					for areaPos in skillArea:
+						for battler in battlers:
+							if areaPos == $TileMap.world_to_map(battler.position):
+								if battler.stats.hp > 0:
+									OnDamageTaken(battler)
+								break
+					# TODO - joteki suoraan arraysta?
+					for skill in activeCharacter.learnedSkills:
+						if skill.name == activeSkill.name:
+							skill.currentCooldown = skill.spellCooldown + 1
+					#$TurnSystem/PlayerParty/Player.learnedSkills[activeSkill].currentCooldown = activeSkill.spellCooldown
+					EndTurn()
 		$TileMap/TargetMap.clear()
 			
 func GetPath(pos_in_world_from : Vector2, pos_in_world_to,steps, excludes, checkAreas = true, diagonal = true, cornerCut = false):
@@ -221,25 +224,18 @@ func GetArea(pos_in_world : Vector2, _range, diagonal : bool, excludes, cornercu
 func GetLine(pos_in_world : Vector2, _range, excludes, collideArea2d):
 	var space = get_world_2d().direct_space_state
 	return bfs.GetLine($TileMap.world_to_map(pos_in_world), _range, space, excludes, collideArea2d, battlerIDs)
-
-func _on_Attack_btn_pressed():
-	GetAttackArea()
-	Action = ATTACK
-
-func _on_EndTurn_btn_pressed():
-	EndTurn()
 	
 func EndTurn():
-	Action = MOVE
+	Action = null
 	$Line2D.clear_points()
 	$TileMap/TargetMap.clear()
 	activeCharacter = TurnSystem.NextTurn()
 	#$Camera2D.target = activeCharacter
+	yield(get_tree().create_timer(0.15), "timeout")
 	for _i in range(TurnSystem.waitList.size()):
 		var skipTurn = false
 		if activeCharacter.statusEffects.skipTurn > 0:
 			skipTurn = true
-		yield(get_tree().create_timer(0.3), "timeout")
 		if activeCharacter.statusEffects.slow > 0:
 			activeCharacter.currentAP = min(activeCharacter.currentAP + activeCharacter.AP_per_turn - 2, activeCharacter.actionPoints - 2)
 		else:
@@ -248,6 +244,7 @@ func EndTurn():
 		if activeCharacter.stats.hp <= 0:
 			activeCharacter.Dead()
 			activeCharacter = TurnSystem.NextTurn()
+			CheckCombatState()
 			continue
 		if skipTurn:
 			yield(get_tree().create_timer(0.5), "timeout")
@@ -255,10 +252,13 @@ func EndTurn():
 			#$Camera2D.target = activeCharacter
 		else:
 			break
-	UpdateTurnQue()
+	for skill in activeCharacter.learnedSkills:
+		if skill.currentCooldown > 0:
+			skill.currentCooldown -= 1
+	# TODO muuta checkPoint tjsp
 	UpdateEntityID()
-	# TODO <- ?
 	if activeCharacter.is_in_group("enemyParty"):
+		Action = ENEMYTURN
 		# looppaa playeri tyypit
 		var moveDistance
 		var diagonalRange
@@ -267,6 +267,7 @@ func EndTurn():
 		if activeCharacter.inCombat:
 			# pelaaja array vihulle -> vihu check dist
 			# move - diagonal - nondiagonal
+			# TODO !!!!  kun 10 raja tulee täytee nii vihu ei liiku
 			$TurnSystem/PlayerParty/Player/CollisionShape2D.disabled = true
 			moveDistance = GetPath(activeCharacter.position, $TurnSystem/PlayerParty/Player.position, 10, [], true)
 			nondiagonalRange = GetPath(activeCharacter.position, $TurnSystem/PlayerParty/Player.position, 10, [], false, false, false)
@@ -274,7 +275,6 @@ func EndTurn():
 			$TurnSystem/PlayerParty/Player/CollisionShape2D.disabled = false
 
 			command = activeCharacter.CalculateTurn(moveDistance.size() - 1, diagonalRange.size(), nondiagonalRange.size() )
-			#print(command)
 			match command:
 				"MoveTowardsTarget":
 					Action = MOVE
@@ -285,45 +285,10 @@ func EndTurn():
 				"Stay":
 					pass
 		EndTurn()
-	
-func _on_Move_btn_pressed():
-	if activeCharacter.statusEffects.root > 0:
-		print("rooted, ET VOI LIIKKUA")
 	else:
 		Action = MOVE
-#		var excludes = []
-#		for i in $TurnSystem/EnemyParty.get_child_count():
-#			excludes.append($TurnSystem/EnemyParty.get_child(i))
-		if inCombat:
-			highlightAreaBuffer = GetArea(activeCharacter.position, activeCharacter.currentAP, true, [], false, true)
-			for tile in highlightAreaBuffer:
-				$TileMap/TargetMap.set_cellv(tile, 1)
-
-func _on_Skills_btn_pressed():
-	# delete skills from skillList
-	var nButtons = skillMenu.get_children()
-	for b in nButtons:
-		b.remove_from_group("skillsGroup")
-		b.queue_free()
-	# add new skills
-	for skill in activeCharacter.learnedSkills:
-		combatMenu.hide()
-		var button = Button.new()
-		button.text = skill.name
-		button.connect("pressed", self, "_on_press", [button])
-		button.add_to_group("skillsGroup")
-		skillMenu.add_child(button)
-	combatMenu.hide()
-	skillMenu.show()
-	
-func _on_press(button):
-	activeSkill = null
-	for s in activeCharacter.learnedSkills:
-		if s.name == button.text:
-			activeSkill = s
-	if activeSkill != null:
-		UpdateHighlightArea(activeSkill)
-		Action = SKILL
+		lastMousePos = Vector2.ZERO
+		gui.UpdateHotbarCooldown()
 
 func OnDamageTaken(target):
 	randomize()
@@ -378,22 +343,8 @@ func OnDamageTaken(target):
 					var totalDmg = (dmg * dmg) / (dmg + target.stats.defence)
 					target.TakeDmg(totalDmg, "damage")
 	if target.stats.hp <= 0:
-		if activeCharacter == TurnSystem.GetCurrentCharacter():
-			# TODO - override methodin jälkee  --- siis override endturn
-			Action = ENDTURN
 		TurnSystem.RemoveFromQueue(target)
-		UpdateTurnQue()
 		CheckCombatState()
-
-func UpdateTurnQue():
-	var delete = $CanvasLayer/TurnOrder.get_children()
-	for d in delete:
-		d.queue_free()
-	var turns = TurnSystem.TurnOrder()
-	for turn in turns:
-		var text = Label.new()
-		text.text = turn
-		$CanvasLayer/TurnOrder.add_child(text)
 
 func UpdateEntityID():
 	var rid
@@ -405,6 +356,7 @@ func UpdateEntityID():
 
 func UpdateHighlightArea(skill):
 	highlightAreaBuffer.clear()
+	$TileMap/TargetMap.clear()
 	match skill.targeting.type:
 		"ranged":
 			highlightAreaBuffer = GetArea(activeCharacter.position, activeSkill.targeting.range,
@@ -444,10 +396,10 @@ func UpdateSkillArea(skill):
 			if $TileMap.world_to_map(activeCharacter.position) == tile:
 				skillArea.erase(tile)
 
-func ExecuteSpecialEffect(caster, _target):
+func ExecuteSpecialEffect(caster, target):
 	match activeSkill.specialEffect:
 		"teleport":
-			var path = GetPath(activeCharacter.position, 20, [], false )
+			var path = GetPath($TurnSystem/PlayerParty/Player.position, target.position, 20, [], false )
 			if path.size() > 1:
 				caster.MoveToPoint(path[-2], 0)
 		"charge":
@@ -475,11 +427,9 @@ func CheckEnemyLOS():
 				var result = space.intersect_ray(e.position, $TurnSystem/PlayerParty/Player.position, [], 1, true, true)
 				if result["collider"].name == "TileMap":
 					continue
-				elif player in result["collider"].name:
-					if !$TurnSystem/PlayerParty.get_node(result["collider"].name).inCombat:
-						$TurnSystem/PlayerParty.get_node(result["collider"].name).inCombat = true
-						$TurnSystem/PlayerParty.get_node(result["collider"].name).StopMoving()
-						#TurnSystem.AddToQueue($TurnSystem/PlayerParty.get_node(result["collider"].name))
+				if player in result["collider"].name:
+					$TurnSystem/PlayerParty/Player.inCombat = true
+					$TurnSystem/PlayerParty.get_node(result["collider"].name).StopMoving()
 					e.inCombat = true
 					TurnSystem.AddToQueue(e)
 					inCombat = true
@@ -489,18 +439,23 @@ func CheckCombatState():
 		var combat = false
 		var enemies = $TurnSystem/EnemyParty.get_children()
 		for e in enemies:
-			if e.stats.hp <= 0:
-				e.inCombat = false
 			if e.inCombat:
 				combat = true
 				break
 		if !combat:
 			inCombat = false
 			activeCharacter = $TurnSystem/PlayerParty.get_child(0)
+			$TurnSystem/PlayerParty/Player.inCombat = false
 
 func UpdateVision():
+	CheckEnemyLOS()
 	var space = get_world_2d().direct_space_state
 	MapManager.UpdateVision($TurnSystem/PlayerParty/Player.position, $TurnSystem/PlayerParty/Player.sightRadius, space)
+	if !$TurnSystem/PlayerParty/Player.inCombat:
+		for skill in activeCharacter.learnedSkills:
+			if skill.currentCooldown > 0:
+				skill.currentCooldown -= 1
+		gui.UpdateHotbarCooldown()
 
 func GetAttackArea():
 	$TileMap/TargetMap.clear()
@@ -516,12 +471,22 @@ func GetAttackArea():
 	for tile in highlightAreaBuffer:
 		$TileMap/TargetMap.set_cellv(tile, 0)
 
+func SelectSpell(spell):
+	# TODO - odota liikkuminen
+	activeCharacter.StopMoving()
+	activeSkill = spell
+	UpdateHighlightArea(activeSkill)
+	Action = SKILL
 
-
-
-
-
-
+func CheckCollision(pos : Vector2, space):
+	var check = astar.CheckPoint(pos, $TileMap, space, [], true)
+	if "Enemy" in check:
+		$TurnSystem/PlayerParty/Player.inCombat = true
+		var enemy = $TurnSystem/EnemyParty.get_node(check)
+		enemy.inCombat = true
+		TurnSystem.AddToQueue(enemy)
+		inCombat = true
+	# if "object" in check -> brake it etc.
 
 
 

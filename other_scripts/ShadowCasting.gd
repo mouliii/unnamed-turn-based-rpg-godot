@@ -61,6 +61,7 @@ func UpdateVision(pos : Vector2, radius, space : Physics2DDirectSpaceState):
 				var oldTileTextureRect = tm.tile_set.tile_get_region(id)
 				tm.get_child(2).tile_set.tile_set_texture(newTileID, oldTileTexture)
 				tm.get_child(2).tile_set.tile_set_region(newTileID, oldTileTextureRect)
+				# TODO - tähä shader tai toimiiko modulate?
 				tm.get_child(2).tile_set.tile_set_modulate(newTileID, Color(0.2,0,0,0.4))
 				
 				tm.get_child(2).set_cellv(tile, newTileID)
@@ -87,7 +88,7 @@ func CastLight(gridPosn, viewRadius, startColumn, leftViewSlope, rightViewSlope,
 	# TODO kato forloopit
 	var currentCol = startColumn
 	for xc in range(currentCol, viewCeiling + 1):
-		for yc in range(xc, 0 - 1, -1):
+		for yc in range(xc, -1, -1):
 			var gridX = gridPosn.x + xc * octantTransform[0] + yc * octantTransform[1];
 			var gridY = gridPosn.y + xc * octantTransform[2] + yc * octantTransform[3];
 			# min tai maks

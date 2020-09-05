@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://scenes/Stats/Warrior.tres" type="Resource" id=1]
 [ext_resource path="res://res/textures/tilset.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://scenes/Enemy.gd" type="Script" id=7]
 [ext_resource path="res://scenes/EntityStatusEffects.gd" type="Script" id=8]
 [ext_resource path="res://scenes/Stats/Skills.gd" type="Script" id=9]
+[ext_resource path="res://scenes/Stats/vihu.tres" type="Resource" id=10]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 4.50206
@@ -37,6 +38,7 @@ radius = 58.8858
 [node name="Enemy" type="Area2D"]
 rotation = 0.20944
 script = ExtResource( 7 )
+startingStats = ExtResource( 10 )
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0, -6 )

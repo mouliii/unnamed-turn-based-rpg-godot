@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://scenes/Stats/StartingStats.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+job_name = "Boss"
+maxHp = 800
+maxMp = 100
+strength = 10
+intelligence = 10
+agility = 9
+defence = 60
+speed = 5

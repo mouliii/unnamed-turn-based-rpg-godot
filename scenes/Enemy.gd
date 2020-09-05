@@ -27,13 +27,12 @@ func _ready():
 	var s = load("res://scenes/Stats/vihu.tres")
 	stats.initialize(s)
 	learnedSkills = skillManager.learnedSkills
-	stats.hp = stats.maxHp
 	HpBarUpdate()
 	gear.EquipGear(armors["headArmor"], "headArmor")
 	gear.EquipGear(armors["chestArmor"], "chestArmor")
 	gear.EquipGear(armors["legArmor"], "legArmor")
 	gear.EquipGear(armors["mainHand"], "mainHand")
-	
+
 func _process(_delta):
 	match state:
 		IDLE:
@@ -95,7 +94,7 @@ func MoveToPoint(point, time):
 	tween.start()
 
 func StopMoving():
-	if path != null:
+	if !path.empty():
 		var pathfront = path[0]
 		path.clear()
 		path.append(pathfront)
@@ -137,6 +136,7 @@ func Dead():
 	$aggro_area/CollisionShape2D.disabled = true
 	$CollisionShape2D.disabled = true
 	searchPlayer = false
+	inCombat = false
 	
 	HpBar.hide()
 	var rand = randi() % 10
@@ -163,8 +163,10 @@ var armors = {
 func Draw(canSee : bool):
 	if canSee:
 		$Sprite.show()
+		$HPBar.show()
 	else:
 		$Sprite.hide()
+		$HPBar.hide()
 
 
 

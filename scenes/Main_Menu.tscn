@@ -1,0 +1,84 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://res/textures/tilset.png" type="Texture" id=1]
+[ext_resource path="res://scenes/Main_Menu.gd" type="Script" id=2]
+
+[node name="Main_Menu" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Button" type="Button" parent="."]
+margin_left = 90.8
+margin_top = 231.253
+margin_right = 262.8
+margin_bottom = 303.253
+text = "Uusi Peli"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 798.968, 176.284 )
+scale = Vector2( 10.072, 11.1108 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 82, 144, 13, 16 )
+
+[node name="Sprite2" type="Sprite" parent="."]
+position = Vector2( 612.353, 355.327 )
+scale = Vector2( 10.072, 11.1108 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 96, 138, 16, 22 )
+
+[node name="Sprite3" type="Sprite" parent="."]
+position = Vector2( 826.839, 402.795 )
+scale = Vector2( 10.072, 11.1108 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 48, 176, 16, 16 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = 89.0
+margin_top = 51.0
+margin_right = 685.0
+margin_bottom = 216.0
+text = "- Shadow Casting kusee väillä:
+	- menee välillä seinien läpi
+	- vihut ei aina näy kun pitäisi
+	- Alku ympyrä menee seinien läpi
+- Välillä hiirtä täytyy liikutella, että skillit yms. aktivoituu
+- Ei ole spell efectejä yms.
+- Juostessa, jos aktivoi skillin saattaa skillin alue jäädä  yhden ruudun jälkeen pelaajasta
+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="."]
+margin_left = 88.3269
+margin_top = 316.832
+margin_right = 327.327
+margin_bottom = 392.832
+text = "Randomisoitu mappi
+Painamalla oikeaa hiirenkorvaa pelaaja pysähtyy tai deaktivoi skillin
+
+dunkussa on normi vihuja ja \"bossi\""
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="."]
+margin_left = 351.0
+margin_top = 213.0
+margin_right = 590.0
+margin_bottom = 310.0
+text = "TODO:
+- kokeile neliö line shadow casting
+- brenshem line ( interpoloi?)
+- tai raycast
+- benchamark
+- vertaa nykyisee"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

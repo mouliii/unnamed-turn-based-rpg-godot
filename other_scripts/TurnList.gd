@@ -41,14 +41,19 @@ func GetFirstCharacater():
 
 func GetCombatants():
 	var battlers = []
-	var nChild = get_child_count()
-	for n in nChild:
-		var characters = get_child(n).get_children()
-		for c in characters:
-			if !c.inCombat:
-				continue
-			if c.stats.hp > 0:
-				battlers.append(c)
+	battlers.append($PlayerParty/Player)
+	var goodguys = get_child(0).get_children()
+	for c in range(1,goodguys.size()):
+		if !goodguys[c].inCombat:
+			continue
+		if goodguys[c].stats.hp > 0:
+			battlers.append(goodguys[c])
+	var badguys = get_child(1).get_children()
+	for c in badguys:
+		if !c.inCombat:
+			continue
+		if c.stats.hp > 0:
+			battlers.append(c)
 	return battlers
 
 func TurnOrder():
