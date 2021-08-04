@@ -28,14 +28,14 @@ func GenerateMap():
 	
 	var roomSize = Vector2(round( rand_range(roomMinSize,roomMaxSize) ), round(rand_range(roomMinSize,roomMaxSize)) )
 	var pos = Vector2(int(rand_range(0,mapSize.x - roomSize.x)), int(rand_range(0,mapSize.y - roomSize.y)) )
-	var room = Rect2(pos,roomSize)
-	playerSpawnPoint = Vector2( round(room.position.x + room.size.x / 2), round(room.position.y + room.size.y / 2))
-	rooms.append(room)
+	var newroom = Rect2(pos,roomSize)
+	playerSpawnPoint = Vector2( round(newroom.position.x + newroom.size.x / 2), round(newroom.position.y + newroom.size.y / 2))
+	rooms.append(newroom)
 	
 	for _i in range(nRooms-1):
 		roomSize = Vector2(int( rand_range(roomMinSize,roomMaxSize) ), int(rand_range(roomMinSize,roomMaxSize)) )
 		pos = Vector2(int(rand_range(0,mapSize.x - roomSize.x)), int(rand_range(0,mapSize.y - roomSize.y)) )
-		room = Rect2(pos,roomSize)
+		newroom = Rect2(pos,roomSize)
 
 		# huoneet
 		var maxTries = maximumTries
@@ -46,17 +46,17 @@ func GenerateMap():
 			not_colliding = true
 			badRoom = false
 			for r in rooms:			
-				while r.intersects(room, true):
+				while r.intersects(newroom, true):
 					pos = Vector2(int(rand_range(0,mapSize.x - roomSize.x)), int(rand_range(0,mapSize.y - roomSize.y)) )
-					room.position = pos
+					newroom.position = pos
 					not_colliding = false
 					badRoom = true
 #		yield(get_tree().create_timer(0.5), "timeout")
 		if not badRoom:
-			rooms.append(room)
+			rooms.append(newroom)
 			# TODO chance tai jtn
 			#if _i < nRooms-1:
-			enemySpawnPoints.append(Vector2( round(room.position.x + room.size.x / 2), round(room.position.y + room.size.y / 2)))
+			enemySpawnPoints.append(Vector2( round(newroom.position.x + newroom.size.x / 2), round(newroom.position.y + newroom.size.y / 2)))
 			# TODO - poista, demo mite generoi
 #			for room in rooms:
 #				for x in range(room.size.x):
